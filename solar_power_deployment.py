@@ -11,38 +11,28 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load trained model
-model = joblib.load('solar_power_prediction_model.pkl')
+model = joblib.load("solar_power_genrator_model.pkl")
 
-st.title('Solar Power Generation Prediction System')
+st.title("Solar Power Generation Prediction")
 
-st.write("Enter weather and environmental data to predict solar power generation")
+st.write("Enter weather and environmental conditions to predict solar power generation")
 
-# User inputs
-day_of_year = st.number_input('Day of Year')
-year = st.number_input('Year')
-month = st.number_input('Month')
-day = st.number_input('Day')
+day_of_year = st.number_input("Day of Year", 1, 366)
+year = st.number_input("Year", 2000, 2100)
+month = st.number_input("Month", 1, 12)
+day = st.number_input("Day", 1, 31)
+first_hour = st.number_input("First Hour of Period", 0, 23)
+is_daylight = st.selectbox("Is Daylight", [0, 1])
+distance_solar_noon = st.number_input("Distance to Solar Noon")
+avg_temp = st.number_input("Average Temperature (Day)")
+wind_dir = st.number_input("Average Wind Direction (Day)")
+wind_speed_day = st.number_input("Average Wind Speed (Day)")
+sky_cover = st.number_input("Sky Cover")
+visibility = st.number_input("Visibility")
+humidity = st.number_input("Relative Humidity")
+wind_speed_period = st.number_input("Average Wind Speed (Period)")
+barometric_pressure = st.number_input("Average Barometric Pressure (Period)")
 
-first_hour = st.number_input('First Hour of Period')
-is_daylight = st.selectbox('Is Daylight', [0,1])
-
-distance_solar_noon = st.number_input('Distance to Solar Noon')
-
-avg_temp = st.number_input('Average Temperature (Day)')
-avg_wind_dir = st.number_input('Average Wind Direction (Day)')
-avg_wind_speed_day = st.number_input('Average Wind Speed (Day)')
-
-sky_cover = st.number_input('Sky Cover')
-visibility = st.number_input('Visibility')
-
-humidity = st.number_input('Relative Humidity')
-
-avg_wind_speed_period = st.number_input('Average Wind Speed (Period)')
-barometric_pressure = st.number_input('Average Barometric Pressure (Period)')
-
-
-# Create dataframe
 df = pd.DataFrame({
     "Day of Year":[day_of_year],
     "Year":[year],
@@ -52,19 +42,15 @@ df = pd.DataFrame({
     "Is Daylight":[is_daylight],
     "Distance to Solar Noon":[distance_solar_noon],
     "Average Temperature (Day)":[avg_temp],
-    "Average Wind Direction (Day)":[avg_wind_dir],
-    "Average Wind Speed (Day)":[avg_wind_speed_day],
+    "Average Wind Direction (Day)":[wind_dir],
+    "Average Wind Speed (Day)":[wind_speed_day],
     "Sky Cover":[sky_cover],
     "Visibility":[visibility],
     "Relative Humidity":[humidity],
-    "Average Wind Speed (Period)":[avg_wind_speed_period],
+    "Average Wind Speed (Period)":[wind_speed_period],
     "Average Barometric Pressure (Period)":[barometric_pressure]
 })
 
-
-# Prediction
-if st.button('Predict Solar Power'):
-
+if st.button("Predict Solar Power"):
     prediction = model.predict(df)
-
-    st.success(f"Predicted Solar Power Generated: {prediction[0]:.2f}")
+    st.success(f"Predicted Solar Power Generated: {prediction[0]}")
